@@ -1,0 +1,5 @@
+Package: server-install
+Version: 0.2
+Maintainer: Mathieu Morgat
+Architecture: all
+Description: Basic installation script for most widespread web services and utility packets
