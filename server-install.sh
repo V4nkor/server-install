@@ -1,28 +1,42 @@
 #!/bin/bash
+#Name : server-install
 #Basic installation script for most widespread web services and utility packets.
 #Version : 0.2
 #Author : Mathieu Morgat
 #Github page : https://github.com/V4nkor/server-install
 
-currentDirectory="/opt/server-install"
+prodDirectory="/opt/server-install"
+testingDirectory="$(pwd 2>&1)"
 
-#Global function
+
+#--------- Global functions ------------#
 
 showHelp() {
 	echo "Choose packages and services you wish to install using the dialog windows."
-	echo "To do so use the arrow keys to navigate, use space to select / unselect and press enter to confirm"
-  exit 0
+	echo "Use the arrow keys to navigate"
+	echo "use space to select / unselect"
+	echo "press enter to confirm"
+	exit 1
 }
 
+uninstallScript(){
+	sudo $testingDirectory/server-uninstall-all.sh
+	exit 1
+}
+
+if [ "$EUID" -ne 0 ]
+	then echo "This script must be run as root or with sudo"
+	exit 1
+fi
+
 case "${1}" in
-  "-h" | "help" | "-H")
-    showHelp
-    ;;
+	"-h" | "help" | "-H")
+		showHelp ;;
+	"-u" | "uninstall")
+		uninstallScript
 esac
 
-#Install UFW and setup basic rules for web development
-
-#---------Initialise packets dialog------------#
+#--------- Initialise packets dialog ------------#
 
 	cmd=(dialog --keep-tite --separate-output --checklist "Important packets and utilities :" 22 76 16)
 	options=(
@@ -35,11 +49,11 @@ esac
 		ufw "ufw" off
 	)
 
-#---------Store packets choices in variable---------#
+#--------- Store packets choices in variable ---------#
 
 	packets=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
 
-#---------Initialise services dialog------------#
+#--------- Initialise services dialog ------------#
 
 	cmd=(dialog --keep-tite --separate-output --checklist "Web services to install :" 22 76 16)
 	options=(
@@ -50,15 +64,15 @@ esac
 		composer "Composer" on
 	)
 
-#---------Store services choices in variable---------#
+#--------- Store services choices in variable ---------#
 
 	services=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
 
-#---------Packet Functions------------
+#--------- Packet Functions ------------#
 
 	#Install nano
 	installNano(){
-		printf '\e[1;31m%-6s\e[m\n' "!!Not yet implemented -> WIP!!"
+		if (($? == 0)); then eval "apt-get install nano"; fi
 	}
 
 	#Install vim
@@ -91,7 +105,12 @@ esac
 		printf '\e[1;31m%-6s\e[m\n' "!!Not yet implemented -> WIP!!"
 	}
 
-#---------Processing selected packets---------#
+if ([ -z "$packets" ]  && [ -z "$services" ]); then printf '\e[1;31m%-6s\e[m\n' "!!Nothing selected -> Exiting!!" && exit 1 ; fi
+
+# Update existing packets
+sudo apt-get update -y
+
+#--------- Processing selected packets ---------#
 
 	for packet in $packets
 	do
@@ -120,7 +139,7 @@ esac
 		esac
 	done
 
-#---------Services Functions---------#
+#--------- Services Functions ---------#
 
 	#Install SSH functions and start service
 		installSSH(){
@@ -164,7 +183,7 @@ esac
 			printf "Not yet implemented -> WIP\n"
 		}
 
-#---------Processing selected services---------#
+#--------- Processing selected services ---------#
 
 	for service in $services
 	do
@@ -192,7 +211,8 @@ esac
 #Exit script when finished
 exit 0
 
-# Documentation :
+#--------- Documentation ------------#
+
 : <<'END_OF_DOCS'
 
 =head1 NAME
@@ -205,16 +225,30 @@ server-install [OPTIONS]
 
 =head1 OPTIONS
 	-h -H help = Call help function
+	-u uninstall = Uninstall program
 
 =head1 DESCRIPTION
 
 This script was created in order to simplify the process of seting up a web server with the help of dialog windows
 users can select which packets they wish to install and simplifies the setup of web services.
 
-Currently supported webservices : 
--
--
--
+Available packets :
+-nano
+-vim
+-wget
+-curl
+-unzip 
+-git -> user and SSH key config planned
+-ufw -> basic web firewall config planned
+
+Currently supported services : 
+-ssh
+-apache2
+-php
+
+Work in progress : 
+-MySQL
+-Composer
 
 [...]
 

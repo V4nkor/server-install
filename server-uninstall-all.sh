@@ -5,14 +5,15 @@
 #Github page : https://github.com/V4nkor/server-install
 
 currentDirectory="/opt/server-install"
+testingDirectory="$(pwd 2>&1)"
 
 #Purge php
 printf '\e[1;34m%-6s\e[m\n' "----- Removing php -----"
-sudo apt purge php-common libapache2-mod-php php-cli
+sudo apt purge -y php-common libapache2-mod-php php-cli
 
 #Purge Apache 2 and it's directories
 printf '\e[1;34m%-6s\e[m\n' "----- Removing apache2 -----"
-sudo apt purge apache2 apache2-utils
+sudo apt purge -y apache2 apache2-utils
 printf '\e[1;34m%-6s\e[m\n' "Removing directories"
 sudo rm -R /usr/sbin/apache2
 sudo rm -R /usr/lib/apache2
@@ -21,18 +22,24 @@ sudo rm -R /usr/share/apache2
 
 #Remove all dependencies
 printf '\e[1;34m%-6s\e[m\n' "----- Removing dependencies -----"
-sudo apt-get autoremove
+sudo apt-get autoremove -y
 
 #Delete installation file
 printf '\e[1;34m%-6s\e[m\n' "----- Deleting main script -----"
-cd $currentDirectory
-if (($? == 0)); then sudo rm server-install.sh ; fi
+cd $testingDirectory
+if (($? == 0))
+then 
+    sudo rm server-install.sh; 
+else 
+    exit 1
+fi
 
 #Delete itself after everything else was uninstalled
 printf '\e[1;34m%-6s\e[m\n' "----- Self deleting uninstaller -----"
 sudo rm -- "$0"
 
-# Documentation :
+#--------- Documentation ------------#
+
 : <<'END_OF_DOCS'
 
 =head1 NAME
