@@ -43,11 +43,6 @@ Uninstaller for server-install.sh
 
 server-install [OPTIONS]
 
-=head1 OPTIONS
-	-h = This usage.
-	-v = Be verbose.
-	-V = Show version, copyright, and license information.
-
 =head1 DESCRIPTION
 
 A full description of the application and its features.
@@ -56,6 +51,17 @@ May include numerous subsections (i.e., =head2, =head3, etc.)
 [...]
 
 =head1 LICENSE AND COPYRIGHT
+
+This script is under a GNU V 3.0 licence.
+
+You are free to :
+
+-Use this script
+-Modify it to satisfy your use case
+-Redistribute this script
+-Share any modification made
+
+Mathieu Morgat - 2023
 
 =cut
 

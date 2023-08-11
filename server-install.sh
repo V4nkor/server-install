@@ -204,18 +204,32 @@ Basic installation script for most widespread web services and utility packets.
 server-install [OPTIONS]
 
 =head1 OPTIONS
-	-h = This usage.
-	-v = Be verbose.
-	-V = Show version, copyright, and license information.
+	-h -H help = Call help function
 
 =head1 DESCRIPTION
 
-A full description of the application and its features.
-May include numerous subsections (i.e., =head2, =head3, etc.)
+This script was created in order to simplify the process of seting up a web server with the help of dialog windows
+users can select which packets they wish to install and simplifies the setup of web services.
+
+Currently supported webservices : 
+-
+-
+-
 
 [...]
 
 =head1 LICENSE AND COPYRIGHT
+
+This script is under a GNU V 3.0 licence.
+
+You are free to :
+
+-Use this script
+-Modify it to satisfy your use case
+-Redistribute this script
+-Share any modification made
+
+Mathieu Morgat - 2023
 
 =cut
 
