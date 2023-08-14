@@ -20,7 +20,18 @@ showHelp() {
 }
 
 uninstallScript(){
-	sudo $testingDirectory/server-uninstall-all.sh
+	cmd=(dialog --title "Uninstall" \ --backtitle "Uninstall" \ --yesno "Are you sure you want to uninstall ?" 7 60)
+	yesno=$("${cmd[@]}" 2>&1 >/dev/tty)
+	case $yesno in
+		0) 
+			sudo $testingDirectory/server-uninstall-all.sh
+			exit 0 ;;
+		1) 
+			exit 1 ;;
+		255) 
+			exit 1 ;;
+	esac
+	
 	exit 1
 }
 
@@ -32,7 +43,7 @@ fi
 case "${1}" in
 	"-h" | "help" | "-H")
 		showHelp ;;
-	"-u" | "uninstall")
+	"-u")
 		uninstallScript
 esac
 
@@ -221,11 +232,13 @@ Basic installation script for most widespread web services and utility packets.
 
 =head1 SYNOPSIS
 
-server-install [OPTIONS]
+server-install [-h] [-u] [OPTIONS]
 
 =head1 OPTIONS
-	-h -H help = Call help function
-	-u uninstall = Uninstall program
+	-h 			Call help function
+	-H			Call help function
+	help		Call help function
+	-u 			Uninstall program
 
 =head1 DESCRIPTION
 
